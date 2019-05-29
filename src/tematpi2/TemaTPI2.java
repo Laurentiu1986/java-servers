@@ -146,30 +146,38 @@ public class TemaTPI2 extends Thread{
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(TemaTPI2.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                long upt = 0;
                 try {
                     this.socketTCP = new Socket(adresaIP, portTCP);
                     boolean done = false;
                     DataInputStream dIn = new DataInputStream(this.socketTCP.getInputStream());
+                    //
                     //while(!done) {
                         byte messageType = dIn.readByte();
-                        long upt = 0;
+                        
                         switch(messageType)
                         {
                         case 1: // Type A
                             while(dIn.available()>0) {
                                 upt = dIn.readLong();
-                                System.out.println(upt);
+                                System.out.println("Server 1: "+upt);
                             }
                             setUptime(1, upt);
+                            break;
                         case 2: // Type A
                             while(dIn.available()>0) {
                                 upt = dIn.readLong();
-                                System.out.println(upt);
+                                System.out.println("Server 2: "+upt);
                             }
                             setUptime(2, upt);
-
-                          break;
+                            break;
+                        case 3: // Type A
+                            while(dIn.available()>0) {
+                                upt = dIn.readLong();
+                                System.out.println("Server 3: "+upt);
+                            }
+                            setUptime(3, upt);
+                            break;
                         default:
                           done = true;
                         }

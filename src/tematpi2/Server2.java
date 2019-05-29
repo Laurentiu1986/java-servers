@@ -12,6 +12,8 @@ import javax.swing.JButton;
 
 import javax.swing.JOptionPane; 
 import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
  
 
@@ -86,12 +88,43 @@ public class Server2 extends Thread {
         
             
         while (true) {
+            Timer timer2 = new Timer();
             System.out.println("server accept...");
             Socket conexiune = serverTCP.accept();
-            DataOutputStream dOut = new DataOutputStream(conexiune.getOutputStream());
-            dOut.writeByte(1);
-            dOut.writeLong(srv.secondsPassed);
-            dOut.flush();
+            TimerTask task2 = new TimerTask() {
+
+                @Override
+                public void run() {
+                    DataOutputStream dOut = null;
+                    try {
+                        dOut = new DataOutputStream(conexiune.getOutputStream());
+                        try {
+                            dOut.writeByte(1);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Server2.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        try {
+                            dOut.writeLong(srv.secondsPassed);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Server2.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        try {
+                            dOut.flush();
+                        } catch (IOException ex) {
+                            Logger.getLogger(Server2.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    } catch (IOException ex) {
+                        Logger.getLogger(Server2.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        try {
+                            dOut.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(Server2.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            };
+            timer2.scheduleAtFixedRate(task2, 100, 500);
             
             Server2 server2 = new Server2(conexiune);
             System.out.println("server start...");
