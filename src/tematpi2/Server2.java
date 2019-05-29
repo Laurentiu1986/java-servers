@@ -99,7 +99,7 @@ public class Server2 extends Thread {
                     try {
                         dOut = new DataOutputStream(conexiune.getOutputStream());
                         try {
-                            dOut.writeByte(1);
+                            dOut.writeByte(2);
                         } catch (IOException ex) {
                             Logger.getLogger(Server2.class.getName()).log(Level.SEVERE, null, ex);
                         }
